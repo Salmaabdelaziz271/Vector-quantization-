@@ -13,7 +13,7 @@ public class Image {
     List<List<Double>> getImagePixels(String imagePath) {
         List<List<Double>> pixels = new ArrayList<>();
 
-        // Manually specifying 6x6 pixel values
+        
         double[][] pixelValues = {
                 {1, 2, 7, 9, 4, 11},
                 {3, 4, 6, 6, 12, 12},
