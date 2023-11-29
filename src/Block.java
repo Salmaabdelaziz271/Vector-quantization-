@@ -5,12 +5,22 @@ public class Block
 {
     int width;
     int height;
-    List<List<Integer>> pixels = new ArrayList<>();
+    List<List<Double>> pixels = new ArrayList<>();
 
-    public Block(int width , int height , List<List<Integer>> pixels){
+    public Block(int width , int height , List<List<Double>> pixels){
         this.width = width;
         this.height = height;
         this.pixels = pixels;
+    }
+
+    public void printBlock() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                System.out.print(pixels.get(y).get(x) + " ");
+            }
+            System.out.println();
+        }
+
     }
 
 
