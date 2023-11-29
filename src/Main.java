@@ -10,7 +10,7 @@ public class Main {
         //image.getImagePixels("image1.jpg");
 
         String outputPath = "output.txt";
-        printPixelValuesToFile(image.divideIntoBlocks(2 , 2 , "image1.jpg"), outputPath);
+        //printPixelValuesToFile(image.divideIntoBlocks(2 , 2 , "image1.jpg"), outputPath);
     }
 
     public static void printPixelValuesToFile(List<Block> blocks, String outputPath) {
