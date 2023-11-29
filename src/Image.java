@@ -13,7 +13,6 @@ public class Image {
     List<List<Double>> getImagePixels(String imagePath) {
         List<List<Double>> pixels = new ArrayList<>();
 
-        // Manually specifying 6x6 pixel values
         double[][] pixelValues = {
                 {1, 2, 7, 9, 4, 11},
                 {3, 4, 6, 6, 12, 12},
@@ -54,7 +53,7 @@ public class Image {
                     }
                     blockPixels.add(sublist);
                 }
-                Block b = new Block(blockWidth, blockHeight, blockPixels);
+                Block b = new Block(blockWidth, blockHeight, blockPixels, -1);
                 allBlocks.add(b);
             }
         }
@@ -64,7 +63,7 @@ public class Image {
     public Block getAverageBlock(int blockWidth, int blockHeight, List<Block> blocks) {
 
         int totalBlocks = blocks.size();
-
+        int index = -1;
         double[][] sumOfPixels = new double[blockHeight][blockWidth];
 
         for (Block block : blocks) {
@@ -88,7 +87,7 @@ public class Image {
             averagePixels.add(row);
         }
 
-        return new Block(blockWidth, blockHeight, averagePixels);
+        return new Block(blockWidth, blockHeight, averagePixels, index);
     }
 
 
