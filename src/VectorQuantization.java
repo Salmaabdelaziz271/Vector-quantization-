@@ -47,8 +47,8 @@ public class VectorQuantization {
     }
 
     public void nearestVectors(List<Block> imageBlocks, List<Block> leaf) {
-        double minDistance = Double.MAX_VALUE;
         for (Block block : imageBlocks) {
+            double minDistance = Double.MAX_VALUE;  
             for (int i = 0; i < leaf.size(); i++) {
                 double distance = getDistance(block, leaf.get(i));
                 if (distance < minDistance) {
@@ -58,4 +58,7 @@ public class VectorQuantization {
             }
         }
     }
+
+
+
 }
