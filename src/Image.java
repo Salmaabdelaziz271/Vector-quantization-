@@ -1,10 +1,7 @@
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+
 public class Image {
     int width;
     int height;
@@ -89,6 +86,5 @@ public class Image {
 
         return new Block(blockWidth, blockHeight, averagePixels, index);
     }
-
 
 }
