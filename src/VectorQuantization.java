@@ -64,7 +64,7 @@ public class VectorQuantization {
 
 
     List<Block> getFinalBlocks(int finalBlocksNum, int blockWidth, int blockHeight, String imagePath) {
-        Image image = new Image();
+        ImageLoad image = new ImageLoad();
         List<Block> imageBlocks = image.divideIntoBlocks(blockWidth, blockHeight, imagePath);
         List<Block> leaf = new ArrayList<>();
         leaf.add(splitLeft(image.getAverageBlock(blockWidth, blockHeight, imageBlocks)));
