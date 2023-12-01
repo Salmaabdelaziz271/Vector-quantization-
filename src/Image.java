@@ -92,14 +92,15 @@ public class Image {
     }
 
 
-    public List<Block> replaceImage(List<Block> finalBlocks, List<Block> originalImage) {
-        for (Block block : originalImage) {
+    List<Block> replaceImage (List<Block> finalBlocks , List<Block> originalImage){
+        VectorQuantization v = new VectorQuantization();
+        v.nearestVectors(originalImage , finalBlocks);
+
+        for(Block block : originalImage){
             int index = block.index;
             if (index >= 0 && index < finalBlocks.size()) {
                 Block replacementBlock = finalBlocks.get(index);
-
-                // Copy the pixels from replacementBlock to the original block
-                block.setPixels(new ArrayList<>(replacementBlock.getPixels()));
+                block.setPixels(replacementBlock.getPixels());
             }
         }
         return originalImage;
