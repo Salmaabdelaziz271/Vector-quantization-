@@ -45,6 +45,7 @@ public class BlockInfo {
                 int centerY = (int) ((screenSize.getHeight() - frame.getHeight()) / 2);
                 frame.setLocation(centerX, centerY);
                 frame.setVisible(true);
+                SwingUtilities.getWindowAncestor(panel1).dispose();
             }
         });
     }

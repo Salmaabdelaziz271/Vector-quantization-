@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Random;
 
 public class SelectImage {
     private JPanel panel1;
@@ -54,16 +55,19 @@ public class SelectImage {
                         int blockWidth = Integer.parseInt(blockWidthField.getText());
                         int blockHeight = Integer.parseInt(blockHeightField.getText());
 
+                        Random random = new Random();
+                        int randomThreeDigit = random.nextInt(900) + 100;
+                        String imageName = "newImage" + randomThreeDigit + ".jpg";
                         imageLoad.newImage(
                                 imageLoad.replaceImage(
                                         v.getFinalBlocks(blocksNum, blockWidth, blockHeight, imagePath),
                                         imageLoad.divideIntoBlocks(blockWidth, blockHeight, imagePath)
                                 ),
-                                "newImage123.jpg"
+                                imageName
                         );
 
-                        newPath.setText("newImage123.jpg");
-                        imagePath = "newImage123.jpg";
+                        newPath.setText(imageName);
+                        imagePath = imageName;
 
                         newImageButton.setText("");
                         ImageIcon imageIcon = new ImageIcon(imagePath);
@@ -91,11 +95,13 @@ public class SelectImage {
                     int centerX = (int) ((screenSize.getWidth() - frame.getWidth()) / 2);
                     int centerY = (int) ((screenSize.getHeight() - frame.getHeight()) / 2);
                     frame.setLocation(centerX, centerY);
+                    SwingUtilities.getWindowAncestor(panel1).dispose();
                     frame.setVisible(true);
 
                     blockInfo.getBlockWidth().setText(blockWidthField.getText());
                     blockInfo.getBlockHeight().setText(blockHeightField.getText());
                     blockInfo.getBlocksNum().setText(blocksNumField.getText());
+
                 }
             }
         });
