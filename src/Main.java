@@ -8,21 +8,11 @@ public class Main {
         Scanner in = new Scanner(System.in);
         Image image = new Image();
         VectorQuantization v = new VectorQuantization();
-        //List<Block> blocks = image.divideIntoBlocks(2,2,"image2.jpg");
-//       Block b = image.getAverageBlock(2 , 2 , blocks);
-//       Block left = v.splitLeft(b);
-//       Block right = v.splitRight(b);
-//       left.printBlock();
-//       System.out.println("-------------");
-//       right.printBlock();
-//        List<Block> blocks = v.getFinalBlocks(4 , 2,2,"image1.jpg");
-//        for(Block b : blocks){
-//            b.printBlock();
-//        }
-        List<Block> finalBlocks = v.getFinalBlocks(10 ,2  , 5 , "image2.jpg");
+
+        List<Block> finalBlocks = v.getFinalBlocks(50 ,2  , 5 , "image2.jpg");
         List<Block> originalBlocks = image.divideIntoBlocks(2, 5 , "image2.jpg");
         List<Block> replacementImage = image.replaceImage(finalBlocks , originalBlocks);
-        image.newImage(replacementImage , "newImage22.jpg");
+        image.newImage(replacementImage , "newImage45.jpg");
 
     }
 

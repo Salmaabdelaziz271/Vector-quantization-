@@ -92,19 +92,19 @@ public class Image {
     }
 
 
-    List<Block> replaceImage (List<Block> finalBlocks , List<Block> originalImage){
-        VectorQuantization v = new VectorQuantization();
-        v.nearestVectors(originalImage , finalBlocks);
-
-        for(Block block : originalImage){
+    public List<Block> replaceImage(List<Block> finalBlocks, List<Block> originalImage) {
+        for (Block block : originalImage) {
             int index = block.index;
             if (index >= 0 && index < finalBlocks.size()) {
                 Block replacementBlock = finalBlocks.get(index);
-                block.setPixels(replacementBlock.getPixels());
+
+                // Copy the pixels from replacementBlock to the original block
+                block.setPixels(new ArrayList<>(replacementBlock.getPixels()));
             }
         }
         return originalImage;
     }
+
 
 
     public void newImage(List<Block> replacedBlocks, String outputPath) {

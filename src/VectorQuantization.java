@@ -46,49 +46,45 @@ public class VectorQuantization {
         return distance;
     }
 
-    public void nearestVectors(List<Block> imageBlocks, List<Block> leaf) {
+    private void nearestVectors(List<Block> imageBlocks, List<Block> leaf, List<Block> nearestBlocks) {
         for (Block block : imageBlocks) {
             double minDistance = Double.MAX_VALUE;
+            int minIndex = -1;
+
             for (int i = 0; i < leaf.size(); i++) {
                 double distance = getDistance(block, leaf.get(i));
                 if (distance < minDistance) {
                     minDistance = distance;
-                    block.index = i;
+                    minIndex = i;
                 }
             }
+            
+            block.index = minIndex;
+            nearestBlocks.add(block);
         }
     }
 
-    List<Block> getFinalBlocks (int finalBlocksNum , int blockWidth, int blockHeight , String imagePath){
+    public List<Block> getFinalBlocks(int finalBlocksNum, int blockWidth, int blockHeight, String imagePath) {
         Image image = new Image();
-        List<Block> imageBlocks =  image.divideIntoBlocks(blockWidth , blockHeight , imagePath);
+        List<Block> imageBlocks = image.divideIntoBlocks(blockWidth, blockHeight, imagePath);
+
         List<Block> leaf = new ArrayList<>();
-        leaf.add(splitLeft(image.getAverageBlock(blockWidth , blockHeight ,imageBlocks)));
-        leaf.add(splitRight(image.getAverageBlock(blockWidth , blockHeight , imageBlocks)));
+        leaf.add(splitLeft(image.getAverageBlock(blockWidth, blockHeight, imageBlocks)));
+        leaf.add(splitRight(image.getAverageBlock(blockWidth, blockHeight, imageBlocks)));
 
-        List<Block> nearstBlocks = new ArrayList<>();
-        List<Block> tempBlocks = new ArrayList<>();
-        List <Block>newLeaf = new ArrayList<>();
+        List<Block> nearestBlocks = new ArrayList<>();
+        List<Block> newLeaf = new ArrayList<>();
 
-
-
-        while(leaf.size()<finalBlocksNum){
-            nearestVectors(imageBlocks , leaf);
-            for(int i=0 ;i<leaf.size() ;i++){
-                for(Block b : imageBlocks){
-                    if(b.index == i){
-                        nearstBlocks.add(b);
-                    }
-                }
-                newLeaf.add(image.getAverageBlock(blockWidth, blockHeight , nearstBlocks));
-                nearstBlocks.clear();
-            }
-            leaf.clear();
-            leaf.addAll(newLeaf);
+        while (leaf.size() < finalBlocksNum) {
+            nearestVectors(imageBlocks, leaf, nearestBlocks);
             newLeaf.clear();
 
+            for (int i = 0; i < leaf.size(); i++) {
+                Block replacementBlock = image.getAverageBlock(blockWidth, blockHeight, nearestBlocks);
+                leaf.set(i, replacementBlock);
+            }
 
-            for(int i=0 ;i<leaf.size() ;i++){
+            for (int i = 0; i < leaf.size(); i++) {
                 Block left = splitLeft(leaf.get(i));
                 Block right = splitRight(leaf.get(i));
                 newLeaf.add(left);
@@ -96,29 +92,9 @@ public class VectorQuantization {
             }
             leaf.clear();
             leaf.addAll(newLeaf);
-            newLeaf.clear();
-        }
-
-        while (!tempBlocks.equals(leaf)){
-            tempBlocks = new ArrayList<>(leaf);
-
-            nearestVectors(imageBlocks , leaf);
-            for(int i=0 ;i<leaf.size() ;i++){
-                for(Block b : imageBlocks){
-                    if(b.index == i){
-                        nearstBlocks.add(b);
-                    }
-                }
-                newLeaf.add(image.getAverageBlock(blockWidth , blockHeight , nearstBlocks));
-                nearstBlocks.clear();
-            }
-            leaf.clear();
-            leaf.addAll(newLeaf);
-            newLeaf.clear();
         }
 
         return leaf;
     }
-
 }
 
