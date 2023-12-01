@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Block
 {
@@ -22,7 +24,27 @@ public class Block
             }
             System.out.println();
         }
+        System.out.println("\n");
 
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Block other = (Block) obj;
+        // Compare the contents of pixels or other relevant fields
+        return Objects.equals(pixels, other.pixels);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pixels);
     }
 
 
