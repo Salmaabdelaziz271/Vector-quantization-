@@ -15,11 +15,15 @@ public class Main {
 //       left.printBlock();
 //       System.out.println("-------------");
 //       right.printBlock();
-        List<Block> blocks = v.getFinalBlocks(4 , 2,2,"image1.jpg");
-        for(Block b : blocks){
-            b.printBlock();
-        }
-
+//        List<Block> blocks = v.getFinalBlocks(4 , 2,2,"image1.jpg");
+//        for(Block b : blocks){
+//            b.printBlock();
+//        }
+        List<Block> finalBlocks = v.getFinalBlocks(10 ,2  , 5 , "image2.jpg");
+        List<Block> originalBlocks = image.divideIntoBlocks(2, 5 , "image2.jpg");
+        List<Block> replacementImage = image.replaceImage(finalBlocks , originalBlocks);
+        image.newImage(replacementImage , "newImage22.jpg");
 
     }
+
 }

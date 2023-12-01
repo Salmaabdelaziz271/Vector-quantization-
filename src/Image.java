@@ -1,3 +1,7 @@
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,29 +11,29 @@ public class Image {
     int height;
     int blocksNum;
 
-    List<List<Double>> getImagePixels(String imagePath) {
+    List<List<Double>>  getImagePixels (String imagePath)
+    {
         List<List<Double>> pixels = new ArrayList<>();
+        try{
 
-        double[][] pixelValues = {
-                {1, 2, 7, 9, 4, 11},
-                {3, 4, 6, 6, 12, 12},
-                {4, 9, 15, 14, 9, 9},
-                {10, 10, 20, 18, 8, 8},
-                {4, 3, 17, 16, 1, 4},
-                {4, 5, 18, 18, 5, 6}
-        };
+            File imageFile = new File(imagePath);
+            BufferedImage image = ImageIO.read(imageFile);
 
-        for (int y = 0; y < pixelValues.length; y++) {
-            List<Double> row = new ArrayList<>();
-            for (int x = 0; x < pixelValues[y].length; x++) {
-                row.add(pixelValues[y][x]);
+            width = image.getWidth();
+            height = image.getHeight();
+
+            for (int y = 0; y < height; y++) {
+                List<Double> row = new ArrayList<>();
+                for (int x = 0; x < width; x++) {
+                    int pixel = image.getRGB(x, y);
+                    double grayValue = (pixel >> 16) & 0xFF;
+                    row.add(grayValue);
+                }
+                pixels.add(row);
             }
-            pixels.add(row);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        width = pixels.get(0).size();
-        height = pixels.size();
-
         return pixels;
     }
 
@@ -86,5 +90,55 @@ public class Image {
 
         return new Block(blockWidth, blockHeight, averagePixels, index);
     }
+
+
+    List<Block> replaceImage (List<Block> finalBlocks , List<Block> originalImage){
+        VectorQuantization v = new VectorQuantization();
+        v.nearestVectors(originalImage , finalBlocks);
+
+        for(Block block : originalImage){
+            int index = block.index;
+            if (index >= 0 && index < finalBlocks.size()) {
+                Block replacementBlock = finalBlocks.get(index);
+                block.setPixels(replacementBlock.getPixels());
+            }
+        }
+        return originalImage;
+    }
+
+
+    public void newImage(List<Block> replacedBlocks, String outputPath) {
+        try {
+            BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+            int currentX = 0;
+            int currentY = 0;
+
+            for (Block block : replacedBlocks) {
+                List<List<Double>> blockPixels = block.getPixels();
+
+                for (int y = 0; y < block.getHeight() && currentY + y < height; y++) {
+                    for (int x = 0; x < block.getWidth() && currentX + x < width; x++) {
+                        int pixelValue = blockPixels.get(y).get(x).intValue();
+                        resultImage.setRGB(currentX + x, currentY + y, (pixelValue << 16) | (pixelValue << 8) | pixelValue);
+                    }
+                }
+
+                currentX += block.getWidth();
+                if (currentX >= width) {
+                    currentX = 0;
+                    currentY += block.getHeight();
+                }
+            }
+
+            ImageIO.write(resultImage, "jpg", new File(outputPath));
+
+            System.out.println("Image with replaced blocks saved to: " + outputPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

@@ -16,6 +16,22 @@ public class Block {
         this.index = index;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public List<List<Double>> getPixels() {
+        return pixels;
+    }
+
+    public void setPixels(List<List<Double>> pixels) {
+        this.pixels = pixels;
+    }
+
     public void printBlock() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
