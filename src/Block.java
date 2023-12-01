@@ -3,14 +3,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Block
-{
+public class Block {
     int width;
     int height;
     int index;
     List<List<Double>> pixels = new ArrayList<>();
 
-    public Block(int width , int height , List<List<Double>> pixels, int index){
+    public Block(int width, int height, List<List<Double>> pixels, int index) {
         this.width = width;
         this.height = height;
         this.pixels = pixels;
@@ -46,6 +45,5 @@ public class Block
     public int hashCode() {
         return Objects.hash(pixels);
     }
-
 
 }
