@@ -1,5 +1,10 @@
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -7,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageLoad {
-    int width;
-    int height;
+    static int width;
+    static int height;
     int blocksNum;
 
-    List<List<Double>>  getImagePixels (String imagePath)
+    static List<List<Double>>  getImagePixels(String imagePath)
     {
         List<List<Double>> pixels = new ArrayList<>();
         try{
@@ -34,10 +39,29 @@ public class ImageLoad {
         } catch (IOException e) {
             e.printStackTrace();
         }
+//                double[][] pixelValues = {
+//                {1, 2, 7, 9, 4, 11},
+//                {3, 4, 6, 6, 12, 12},
+//                {4, 9, 15, 14, 9, 9},
+//                {10, 10, 20, 18, 8, 8},
+//                {4, 3, 17, 16, 1, 4},
+//                {4, 5, 18, 18, 5, 6}
+//        };
+//
+//        for (int y = 0; y < pixelValues.length; y++) {
+//            List<Double> row = new ArrayList<>();
+//            for (int x = 0; x < pixelValues[y].length; x++) {
+//                row.add(pixelValues[y][x]);
+//            }
+//            pixels.add(row);
+//        }
+//
+//        width = pixels.get(0).size();
+//        height = pixels.size();
         return pixels;
     }
 
-    public List<Block> divideIntoBlocks(int blockWidth, int blockHeight, String imagePath) {
+    public static List<Block> divideIntoBlocks(int blockWidth, int blockHeight, String imagePath) {
         List<Block> allBlocks = new ArrayList<>();
         List<List<Double>> imagePixels = getImagePixels(imagePath);
 
@@ -108,7 +132,7 @@ public class ImageLoad {
 
 
 
-    public void newImage(List<Block> replacedBlocks, String outputPath) {
+    static void newImage(List<Block> replacedBlocks, String outputPath) {
         try {
             BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 

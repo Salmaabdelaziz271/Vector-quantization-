@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -33,8 +32,8 @@ public class SelectImage {
 
         imageLoad = new ImageLoad();
 
-        selectImageButton.setPreferredSize(new java.awt.Dimension(500, 400));
-        newImageButton.setPreferredSize(new java.awt.Dimension(500, 400));
+        selectImageButton.setPreferredSize(new Dimension(500, 400));
+        newImageButton.setPreferredSize(new Dimension(500, 400));
 
 
         selectImageButton.addActionListener(new ActionListener() {

@@ -43,6 +43,19 @@ public class Block {
 
     }
 
+    public String getBlock() {
+        String result  = "";
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                double pixelValue = pixels.get(y).get(x);
+                int intValue = (int) pixelValue;
+                result += (intValue + " ");
+            }
+
+        }
+        return result;
+    }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -63,3 +76,4 @@ public class Block {
     }
 
 }
+
