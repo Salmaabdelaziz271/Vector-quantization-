@@ -10,12 +10,12 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="5a952" class="javax.swing.JLabel">
+      <component id="5a952" class="javax.swing.JLabel" binding="mainLabel">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <font name="JetBrains Mono" size="18" style="1"/>
+          <font name="JetBrains Mono" size="24" style="1"/>
           <foreground color="-9173612"/>
           <text value=" Select image and press Compress"/>
         </properties>
@@ -52,7 +52,7 @@
       </component>
       <component id="52c90" class="javax.swing.JLabel" binding="selectedPath">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial Rounded MT Bold" size="12"/>
@@ -62,7 +62,7 @@
       </component>
       <component id="16711" class="javax.swing.JLabel" binding="newPath">
         <constraints>
-          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial Rounded MT Bold" size="12"/>
@@ -70,24 +70,24 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="66473" class="javax.swing.JLabel">
+      <component id="66473" class="javax.swing.JLabel" binding="fitstLabel">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <font name="JetBrains Mono" size="14" style="1"/>
+          <font name="JetBrains Mono" size="20" style="1"/>
           <foreground color="-16777216"/>
-          <text value="    Selected Image"/>
+          <text value="Selected Image"/>
         </properties>
       </component>
-      <component id="fbfbd" class="javax.swing.JLabel">
+      <component id="fbfbd" class="javax.swing.JLabel" binding="secondLabel">
         <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <font name="JetBrains Mono" size="14" style="1"/>
+          <font name="JetBrains Mono" size="20" style="1"/>
           <foreground color="-16777216"/>
-          <text value="     New Image"/>
+          <text value="New Image"/>
         </properties>
       </component>
     </children>

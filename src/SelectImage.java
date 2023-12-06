@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,12 +13,14 @@ public class SelectImage {
     private JButton newImageButton;
     private JLabel selectedPath;
     private JLabel newPath;
+    private JLabel fitstLabel;
+    private JLabel secondLabel;
+    private JLabel mainLabel;
     private ImageIcon selectedImageIcon;
     private JTextField blockWidthField;
     private JTextField blockHeightField;
     private JTextField blocksNumField;
 
-    private ImageLoad imageLoad ;
     private String imagePath;
 
 
@@ -25,15 +28,75 @@ public class SelectImage {
     JPanel getPanel1(){
         return panel1;
     }
+
+    public SelectImage(){
+        newImageButton.setPreferredSize(new Dimension(500, 400));
+        selectImageButton.setPreferredSize(new Dimension(500 , 75));
+        Color bg = new Color(242 , 136 , 255);
+        selectImageButton.setBackground(bg);
+        mainLabel.setText(" Select image and press Decompress");
+        fitstLabel.setText("Selected File");
+        secondLabel.setText("Decompressed Image");
+        compressButton.setText("Decompress");
+        selectImageButton.setText("Select File");
+        newImageButton.setText("Decompressed Image");
+        selectImageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectFile();
+            }
+        });
+
+
+        compressButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    Random random = new Random();
+                    int randomThreeDigit = random.nextInt(900) + 100;
+                    String imageName = "newImage" + randomThreeDigit + ".jpg";
+                    VectorQuantization.decompress(imagePath, imageName);
+
+                    newPath.setText(imageName);
+                    imagePath = imageName;
+
+                    newImageButton.setText("");
+                    ImageIcon imageIcon = new ImageIcon(imagePath);
+                    Image image = imageIcon.getImage().getScaledInstance(
+                            newImageButton.getWidth(),
+                            newImageButton.getHeight(),
+                            Image.SCALE_SMOOTH
+                    );
+
+                    newImageButton.setIcon(new ImageIcon(image));
+                    newPath.setText(imagePath);
+                } catch (NumberFormatException a) {
+                    a.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+
+
+
     public SelectImage(JTextField blockWidthField, JTextField blockHeightField , JTextField blocksNumField) {
         this.blockWidthField = blockWidthField;
         this.blockHeightField= blockHeightField;
         this.blocksNumField = blocksNumField;
 
-        imageLoad = new ImageLoad();
 
         selectImageButton.setPreferredSize(new Dimension(500, 400));
-        newImageButton.setPreferredSize(new Dimension(500, 400));
+        newImageButton.setPreferredSize(new Dimension(500 , 75));
+        Color bg = new Color(242 , 136 , 255);
+        newImageButton.setBackground(bg);
+        mainLabel.setText(" Select image and press Compress");
+        fitstLabel.setText("Selected Image");
+        secondLabel.setText("Compressed File");
+        newImageButton.setText("Compressed File");
+        selectImageButton.setText("Select Image");
 
 
         selectImageButton.addActionListener(new ActionListener() {
@@ -48,7 +111,6 @@ public class SelectImage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(canCompress()){
-                    VectorQuantization v = new VectorQuantization();
                     try {
                         int blocksNum = Integer.parseInt(blocksNumField.getText());
                         int blockWidth = Integer.parseInt(blockWidthField.getText());
@@ -57,13 +119,8 @@ public class SelectImage {
                         Random random = new Random();
                         int randomThreeDigit = random.nextInt(900) + 100;
                         String imageName = "newImage" + randomThreeDigit + ".jpg";
-                        imageLoad.newImage(
-                                imageLoad.replaceImage(
-                                        v.getFinalBlocks(blocksNum, blockWidth, blockHeight, imagePath),
-                                        imageLoad.divideIntoBlocks(blockWidth, blockHeight, imagePath)
-                                ),
-                                imageName
-                        );
+                        VectorQuantization.compress(VectorQuantization.getFinalBlocks(blocksNum,blockWidth,blockHeight,imagePath),
+                                ImageLoad.divideIntoBlocks(blockWidth,blockHeight,imagePath));
 
                         newPath.setText(imageName);
                         imagePath = imageName;
@@ -76,10 +133,9 @@ public class SelectImage {
                                 Image.SCALE_SMOOTH
                         );
 
-                        newImageButton.setIcon(new ImageIcon(image));
+                        newImageButton.setText(imagePath);
                         newPath.setText(imagePath);
                     } catch (NumberFormatException a) {
-                        // Handle the case where parsing the integers fails
                         a.printStackTrace();
                     }
 
@@ -116,9 +172,9 @@ public class SelectImage {
             int imageWidth;
             int imageHeight;
 
-            imageLoad.getImagePixels(imagePath);
-            imageWidth = imageLoad.width;
-            imageHeight = imageLoad.height;
+            ImageLoad.getImagePixels(imagePath);
+            imageWidth = ImageLoad.width;
+            imageHeight = ImageLoad.height;
 
             return imageWidth % blockWidth == 0 && imageHeight % blockHeight == 0;
         } catch (NumberFormatException e) {
@@ -147,4 +203,26 @@ public class SelectImage {
             compressButton.setEnabled(true);
         }
     }
+
+    private void selectFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+         FileNameExtensionFilter filter = new FileNameExtensionFilter("Binary Files", "bin");
+         fileChooser.setFileFilter(filter);
+
+        int result = fileChooser.showOpenDialog(panel1);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String selectedFilePath = selectedFile.getAbsolutePath();
+
+            imagePath = selectedFilePath;
+            selectedPath.setText(selectedFilePath);
+            selectImageButton.setText(selectedFilePath);
+
+             compressButton.setEnabled(true);
+        }
+    }
+
 }
