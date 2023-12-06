@@ -21,7 +21,7 @@ public class Main {
         //});
         VectorQuantization v = new VectorQuantization();
         ImageLoad i = new ImageLoad();
-        v.compress(v.getFinalBlocks(100,2,5,"image2.jpg"),
+        v.compress(v.getFinalBlocks(10,2,5,"image2.jpg"),
                 i.divideIntoBlocks(2,5,"image2.jpg"));
         v.decompress("compressedFile.bin", "153.jpg");
 

@@ -32,6 +32,14 @@ public class Block {
         this.pixels = pixels;
     }
 
+    public void setPixel(Double pixel) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                pixels.get(y).set(x, pixel);
+            }
+        }
+    }
+
     public void printBlock() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -42,7 +50,6 @@ public class Block {
         System.out.println("\n");
 
     }
-
     public String getBlock() {
         String result  = "";
         for (int y = 0; y < height; y++) {
@@ -76,4 +83,3 @@ public class Block {
     }
 
 }
-
