@@ -1,10 +1,5 @@
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -14,13 +9,10 @@ import java.util.List;
 public class ImageLoad {
     static int width;
     static int height;
-    int blocksNum;
 
-    static List<List<Double>>  getImagePixels(String imagePath)
-    {
-        List<List<Double>> pixels = new ArrayList<>();
-        try{
-
+    static List<List<List<Double>>> getImagePixels(String imagePath) {
+        List<List<List<Double>>> pixels = new ArrayList<>();
+        try {
             File imageFile = new File(imagePath);
             BufferedImage image = ImageIO.read(imageFile);
 
@@ -28,55 +20,45 @@ public class ImageLoad {
             height = image.getHeight();
 
             for (int y = 0; y < height; y++) {
-                List<Double> row = new ArrayList<>();
+                List<List<Double>> row = new ArrayList<>();
                 for (int x = 0; x < width; x++) {
                     int pixel = image.getRGB(x, y);
-                    double grayValue = (pixel >> 16) & 0xFF;
-                    row.add(grayValue);
+
+                    int red = (pixel >> 16) & 0xFF;
+                    int green = (pixel >> 8) & 0xFF;
+                    int blue = pixel & 0xFF;
+
+                    List<Double> rgbValues = new ArrayList<>();
+                    rgbValues.add((double) red);
+                    rgbValues.add((double) green);
+                    rgbValues.add((double) blue);
+
+                    row.add(rgbValues);
                 }
                 pixels.add(row);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-//                double[][] pixelValues = {
-//                {1, 2, 7, 9, 4, 11},
-//                {3, 4, 6, 6, 12, 12},
-//                {4, 9, 15, 14, 9, 9},
-//                {10, 10, 20, 18, 8, 8},
-//                {4, 3, 17, 16, 1, 4},
-//                {4, 5, 18, 18, 5, 6}
-//        };
-//
-//        for (int y = 0; y < pixelValues.length; y++) {
-//            List<Double> row = new ArrayList<>();
-//            for (int x = 0; x < pixelValues[y].length; x++) {
-//                row.add(pixelValues[y][x]);
-//            }
-//            pixels.add(row);
-//        }
-//
-//        width = pixels.get(0).size();
-//        height = pixels.size();
         return pixels;
     }
 
     public static List<Block> divideIntoBlocks(int blockWidth, int blockHeight, String imagePath) {
         List<Block> allBlocks = new ArrayList<>();
-        List<List<Double>> imagePixels = getImagePixels(imagePath);
+        List<List<List<Double>>> imagePixels = getImagePixels(imagePath);
 
         int width = imagePixels.get(0).size();
         int height = imagePixels.size();
 
         for (int i = 0; i < height; i += blockHeight) {
             for (int j = 0; j < width; j += blockWidth) {
-                List<List<Double>> blockPixels = new ArrayList<>();
+                List<List<List<Double>>> blockPixels = new ArrayList<>();
                 for (int y = i; y < i + blockHeight && y < height; y++) {
-                    List<Double> sublist = new ArrayList<>();
+                    List<List<Double>> row = new ArrayList<>();
                     for (int x = j; x < j + blockWidth && x < width; x++) {
-                        sublist.add(imagePixels.get(y).get(x));
+                        row.add(imagePixels.get(y).get(x));
                     }
-                    blockPixels.add(sublist);
+                    blockPixels.add(row);
                 }
                 Block b = new Block(blockWidth, blockHeight, blockPixels, -1);
                 allBlocks.add(b);
@@ -89,25 +71,39 @@ public class ImageLoad {
 
         int totalBlocks = blocks.size();
         int index = -1;
-        double[][] sumOfPixels = new double[blockHeight][blockWidth];
+        List<List<List<Double>>> sumOfPixels = new ArrayList<>();
 
         for (Block block : blocks) {
-            List<List<Double>> blockPixels = block.pixels;
+            List<List<List<Double>>> blockPixels = block.getPixels();
 
             for (int y = 0; y < blockHeight && y < blockPixels.size(); y++) {
                 for (int x = 0; x < blockWidth && x < blockPixels.get(y).size(); x++) {
-                    sumOfPixels[y][x] += blockPixels.get(y).get(x);
+                    List<Double> rgbValues = blockPixels.get(y).get(x);
+                    if (sumOfPixels.size() <= y) {
+                        sumOfPixels.add(new ArrayList<>());
+                    }
+                    if (sumOfPixels.get(y).size() <= x) {
+                        sumOfPixels.get(y).add(new ArrayList<>(rgbValues)); // Initialize with a copy of the RGB values
+                    } else {
+                        for (int i = 0; i < rgbValues.size(); i++) {
+                            sumOfPixels.get(y).get(x).set(i, sumOfPixels.get(y).get(x).get(i) + rgbValues.get(i));
+                        }
+                    }
                 }
             }
         }
 
-        List<List<Double>> averagePixels = new ArrayList<>();
+        List<List<List<Double>>> averagePixels = new ArrayList<>();
         for (int y = 0; y < blockHeight; y++) {
-            List<Double> row = new ArrayList<>();
+            List<List<Double>> row = new ArrayList<>();
             for (int x = 0; x < blockWidth; x++) {
-                double averageValue = sumOfPixels[y][x] / totalBlocks;
-                DecimalFormat decimalFormat = new DecimalFormat("#.#");
-                row.add(Double.parseDouble(decimalFormat.format(averageValue)));
+                List<Double> rgbValues = new ArrayList<>();
+                for (int i = 0; i < sumOfPixels.get(y).get(x).size(); i++) {
+                    double averageValue = sumOfPixels.get(y).get(x).get(i) / totalBlocks;
+                    DecimalFormat decimalFormat = new DecimalFormat("#.#");
+                    rgbValues.add(Double.parseDouble(decimalFormat.format(averageValue)));
+                }
+                row.add(rgbValues);
             }
             averagePixels.add(row);
         }
@@ -116,11 +112,12 @@ public class ImageLoad {
     }
 
 
-    List<Block> replaceImage (List<Block> finalBlocks , List<Block> originalImage){
-        VectorQuantization v = new VectorQuantization();
-        v.nearestVectors(originalImage , finalBlocks);
 
-        for(Block block : originalImage){
+    List<Block> replaceImage(List<Block> finalBlocks, List<Block> originalImage) {
+        VectorQuantization v = new VectorQuantization();
+        v.nearestVectors(originalImage, finalBlocks);
+
+        for (Block block : originalImage) {
             int index = block.index;
             if (index >= 0 && index < finalBlocks.size()) {
                 Block replacementBlock = finalBlocks.get(index);
@@ -130,8 +127,6 @@ public class ImageLoad {
         return originalImage;
     }
 
-
-
     static void newImage(List<Block> replacedBlocks, String outputPath) {
         try {
             BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -140,12 +135,17 @@ public class ImageLoad {
             int currentY = 0;
 
             for (Block block : replacedBlocks) {
-                List<List<Double>> blockPixels = block.getPixels();
+                List<List<List<Double>>> blockPixels = block.getPixels();
 
                 for (int y = 0; y < block.getHeight() && currentY + y < height; y++) {
                     for (int x = 0; x < block.getWidth() && currentX + x < width; x++) {
-                        int pixelValue = blockPixels.get(y).get(x).intValue();
-                        resultImage.setRGB(currentX + x, currentY + y, (pixelValue << 16) | (pixelValue << 8) | pixelValue);
+                        List<Double> rgbValues = blockPixels.get(y).get(x);
+                        int red = rgbValues.get(0).intValue();
+                        int green = rgbValues.get(1).intValue();
+                        int blue = rgbValues.get(2).intValue();
+
+                        int pixelValue = (red << 16) | (green << 8) | blue;
+                        resultImage.setRGB(currentX + x, currentY + y, pixelValue);
                     }
                 }
 
@@ -163,7 +163,5 @@ public class ImageLoad {
             e.printStackTrace();
         }
     }
-
-
-
 }
+
