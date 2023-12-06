@@ -7,7 +7,7 @@ import java.util.List;
 
 public class VectorQuantization {
 
-    public Block splitLeft(Block block) {
+    public static Block splitLeft(Block block) {
         List<List<Double>> blockPixels = new ArrayList<>();
         for (int y = 0; y < block.height; y++) {
             List<Double> sublist = new ArrayList<>();
@@ -25,7 +25,7 @@ public class VectorQuantization {
         return splitBlock;
     }
 
-    public Block splitRight(Block block) {
+    public static Block splitRight(Block block) {
         List<List<Double>> blockPixels = new ArrayList<>();
         for (int y = 0; y < block.height; y++) {
             List<Double> sublist = new ArrayList<>();
@@ -39,7 +39,7 @@ public class VectorQuantization {
         return splitBlock;
     }
 
-    public double getDistance(Block block1, Block block2) {
+    public static double getDistance(Block block1, Block block2) {
         double distance = 0;
         for (int y = 0; y < block1.height; y++) {
             for (int x = 0; x < block1.width; x++) {
@@ -49,7 +49,7 @@ public class VectorQuantization {
         return distance;
     }
 
-    public void nearestVectors(List<Block> imageBlocks, List<Block> leaf) {
+    public static void nearestVectors(List<Block> imageBlocks, List<Block> leaf) {
         for (Block block : imageBlocks) {
             double minDistance = Double.MAX_VALUE;
             int minIndex = -1;
@@ -67,7 +67,7 @@ public class VectorQuantization {
     }
 
 
-    List<Block> getFinalBlocks(int finalBlocksNum, int blockWidth, int blockHeight, String imagePath) {
+    public static List<Block>  getFinalBlocks(int finalBlocksNum, int blockWidth, int blockHeight, String imagePath) {
         ImageLoad image = new ImageLoad();
         List<Block> imageBlocks = image.divideIntoBlocks(blockWidth, blockHeight, imagePath);
         List<Block> leaf = new ArrayList<>();
@@ -127,7 +127,7 @@ public class VectorQuantization {
         return leaf;
     }
 
-    public void compress(List<Block>finalBlock, List<Block>originalImage) {
+    public static void compress(List<Block>finalBlock, List<Block>originalImage) {
         int width = finalBlock.get(0).width;
         int height = finalBlock.get(0).height;
         String codeBook = "";
@@ -172,7 +172,7 @@ public class VectorQuantization {
 
     }
 
-    public void decompress(String path, String outputImagePath) {
+    public static void decompress(String path, String outputImagePath) {
         File file = new File(path);
         String codeBook = "";
         String compressedText = "";
